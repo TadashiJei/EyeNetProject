@@ -54,10 +54,10 @@ eyenet/
 - [x] Create network topology view
 
 ### 5. Reports & Analytics
-- [ ] Implement historical data charts
-- [ ] Create department usage reports
-- [ ] Add export functionality
-- [ ] Implement predictive analysis views
+- [x] Implement historical data charts
+- [x] Create department usage reports
+- [x] Add export functionality
+- [x] Implement predictive analysis views
 
 ### 6. Settings & Configuration
 - [ ] Create department management
