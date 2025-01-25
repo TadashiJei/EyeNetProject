@@ -104,6 +104,17 @@ eyenet/
 - [x] Add indexing for performance
 - [x] Set up data backup system
 
+### 7. Machine Learning Integration
+- [x] Set up ML service structure
+- [x] Create ML interfaces and types
+- [ ] Implement anomaly detection model
+- [ ] Add bandwidth prediction
+- [ ] Create traffic classification
+- [ ] Set up resource optimization
+- [ ] Train and evaluate models
+- [ ] Deploy ML pipeline
+- [ ] Monitor model performance
+
 ## DevOps Tasks
 
 ### 1. Development Environment
