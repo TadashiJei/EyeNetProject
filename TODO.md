@@ -41,17 +41,17 @@ eyenet/
 - [x] Set up protected routes
 
 ### 3. Dashboard
-- [ ] Create main dashboard layout
-- [ ] Implement real-time network status view
-- [ ] Add department usage charts
-- [ ] Create bandwidth monitoring widgets
-- [ ] Implement application usage tables
+- [x] Create main dashboard layout
+- [x] Implement real-time network status view
+- [x] Add department usage charts
+- [x] Create bandwidth monitoring widgets
+- [x] Implement application usage tables
 
 ### 4. Network Management
-- [ ] Create device management interface
-- [ ] Implement bandwidth allocation controls
-- [ ] Add QoS policy management
-- [ ] Create network topology view
+- [x] Create device management interface
+- [x] Implement bandwidth allocation controls
+- [x] Add QoS policy management
+- [x] Create network topology view
 
 ### 5. Reports & Analytics
 - [ ] Implement historical data charts
