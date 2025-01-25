@@ -60,10 +60,10 @@ eyenet/
 - [x] Implement predictive analysis views
 
 ### 6. Settings & Configuration
-- [ ] Create department management
-- [ ] Implement user management
-- [ ] Add system configuration
-- [ ] Create backup/restore interface
+- [x] Create department management
+- [x] Implement user management
+- [x] Add system configuration
+- [x] Create backup/restore interface
 
 ## Backend Tasks
 
