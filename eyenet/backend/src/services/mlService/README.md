@@ -1,15 +1,15 @@
 # Machine Learning Service
 
-This directory contains the machine learning components of the EyeNet project.
+This directory contains the TensorFlow.js-based machine learning components of the EyeNet project.
 
 ## Structure
 
 ```
 mlService/
-├── models/              # ML model definitions
-│   ├── anomalyDetection.ts   # Anomaly detection model
-│   ├── bandwidthPrediction.ts # Bandwidth prediction model
-│   └── networkClassifier.ts   # Network traffic classifier
+├── models/              # TensorFlow.js model definitions
+│   ├── anomalyDetection.ts   # LSTM-based anomaly detection
+│   ├── bandwidthPrediction.ts # Time series prediction model
+│   └── networkClassifier.ts   # Traffic classification model
 ├── training/           # Model training scripts
 │   ├── trainAnomalyDetection.ts
 │   ├── trainBandwidthPrediction.ts
@@ -46,27 +46,40 @@ mlService/
 
 ## Getting Started
 
-1. Install required ML dependencies:
+1. Install TensorFlow.js dependencies:
    ```bash
-   npm install @tensorflow/tfjs-node scikit-learn pandas numpy
+   npm install @tensorflow/tfjs-node @tensorflow/tfjs-node-gpu
    ```
 
-2. Set up your model training environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate
-   pip install -r requirements.txt
-   ```
-
-3. Train the models:
+2. Train the models:
    ```bash
    npm run train-models
    ```
 
-4. Run inference:
+3. Run inference:
    ```bash
    npm run start-ml-service
    ```
+
+## Model Architectures
+
+### Bandwidth Prediction
+- LSTM-based sequence model
+- Input: 24-hour sequence of bandwidth usage
+- Output: 6-hour bandwidth prediction
+- Features: bandwidth usage, time of day, day of week
+
+### Anomaly Detection
+- Autoencoder architecture
+- Input: Network metrics vector
+- Output: Anomaly score and contributing features
+- Real-time detection capability
+
+### Traffic Classification
+- Deep neural network
+- Input: Network flow features
+- Output: Traffic type probabilities
+- Multi-class classification
 
 ## API Endpoints
 
@@ -84,3 +97,13 @@ Track and update model performance metrics here:
 - Anomaly Detection: Precision, Recall, F1-Score
 - Bandwidth Prediction: RMSE, MAE, R²
 - Traffic Classification: Accuracy, Confusion Matrix
+
+## Model Persistence
+
+Models are saved and loaded using TensorFlow.js model format:
+```typescript
+// Save model
+await model.save('file:///path/to/model');
+
+// Load model
+const model = await tf.loadLayersModel('file:///path/to/model');

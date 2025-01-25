@@ -20,7 +20,9 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.1",
     "node-routeros": "^1.6.9",
-    "ws": "^8.14.2"
+    "ws": "^8.14.2",
+    "@tensorflow/tfjs-node": "^4.15.0",
+    "@tensorflow/tfjs-node-gpu": "^4.15.0"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
