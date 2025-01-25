@@ -1,6 +1,31 @@
 import * as tf from '@tensorflow/tfjs-node';
-import { NetworkMetrics } from '../../../models/networkMetrics';
-import { MLPrediction } from '../mlService';
+import { Document } from 'mongoose';
+import { NetworkState } from '../../../types/monitoring';
+
+interface NetworkMetricsDocument extends Document {
+  timestamp: Date;
+  latency: number;
+  packetLoss: number;
+  status: 'online' | 'offline' | 'degraded';
+  bandwidth: {
+    download: number;
+    upload: number;
+  };
+  departmentUsage: Array<{
+    department: string;
+    usage: number;
+  }>;
+  applicationUsage: Array<{
+    application: string;
+    bandwidth: number;
+  }>;
+}
+
+export interface MLPrediction {
+  timestamp: Date;
+  value: number;
+  confidence: number;
+}
 
 export class BandwidthPredictionModel {
   private model: tf.LayersModel | null = null;
@@ -39,11 +64,11 @@ export class BandwidthPredictionModel {
     });
   }
 
-  private preprocessData(data: NetworkMetrics[]): {
+  private preprocessData(data: NetworkMetricsDocument[]): {
     sequences: tf.Tensor3D;
     targets: tf.Tensor2D;
   } {
-    const bandwidthValues = data.map(d => d.bandwidthUsage);
+    const bandwidthValues = data.map(d => d.bandwidth.download + d.bandwidth.upload);
     const sequences = [];
     const targets = [];
 
@@ -58,7 +83,7 @@ export class BandwidthPredictionModel {
     };
   }
 
-  async train(trainingData: NetworkMetrics[]): Promise<void> {
+  async train(trainingData: NetworkMetricsDocument[]): Promise<void> {
     if (!this.model) {
       await this.buildModel();
     }
@@ -71,8 +96,8 @@ export class BandwidthPredictionModel {
       batchSize: 32,
       validationSplit: 0.2,
       callbacks: {
-        onEpochEnd: (epoch, logs) => {
-          console.log(`Epoch ${epoch + 1} - loss: ${logs?.loss.toFixed(4)} - val_loss: ${logs?.val_loss.toFixed(4)}`);
+        onEpochEnd: (epoch: number, logs: tf.Logs) => {
+          console.log(`Epoch ${epoch + 1} - loss: ${logs.loss.toFixed(4)} - val_loss: ${logs.val_loss.toFixed(4)}`);
         }
       }
     });
@@ -82,14 +107,14 @@ export class BandwidthPredictionModel {
     targets.dispose();
   }
 
-  async predict(historicalData: NetworkMetrics[]): Promise<MLPrediction[]> {
+  async predict(historicalData: NetworkMetricsDocument[]): Promise<MLPrediction[]> {
     if (!this.model) {
       throw new Error('Model not trained');
     }
 
     // Prepare input sequence
     const recentData = historicalData.slice(-this.sequenceLength);
-    const inputSequence = tf.tensor3d([recentData.map(d => d.bandwidthUsage)]).reshape([1, this.sequenceLength, 1]);
+    const inputSequence = tf.tensor3d([recentData.map(d => d.bandwidth.download + d.bandwidth.upload)]).reshape([1, this.sequenceLength, 1]);
 
     // Make prediction
     const prediction = this.model.predict(inputSequence) as tf.Tensor;
