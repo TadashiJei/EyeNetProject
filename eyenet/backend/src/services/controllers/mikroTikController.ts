@@ -51,30 +51,19 @@ export class MikroTikController implements NetworkController {
 
   async getDevices(): Promise<NetworkDevice[]> {
     try {
-      const interfaces = await this.executeCommand('/interface/print');
+      const interfaces = await this.client.write('/interface/print');
       
       return interfaces.map((iface: any) => ({
         id: iface['.id'],
         name: iface.name,
         type: iface.type,
-        ipAddress: this.getInterfaceIp(iface.name),
-        status: iface.running ? 'online' : 'offline',
+        ipAddress: iface.address || 'unknown',
+        status: 'online',
         lastSeen: new Date()
       }));
     } catch (error) {
       console.error('Failed to get interfaces from MikroTik:', error);
       throw error;
-    }
-  }
-
-  private async getInterfaceIp(interfaceName: string): Promise<string> {
-    try {
-      const addresses = await this.executeCommand('/ip/address/print', {
-        '?interface': interfaceName
-      });
-      return addresses[0]?.address?.split('/')[0] || 'unknown';
-    } catch {
-      return 'unknown';
     }
   }
 
